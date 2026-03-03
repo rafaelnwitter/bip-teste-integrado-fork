@@ -34,7 +34,10 @@
             "outputPath": "dist/beneficios-app",
             "index": "src/index.html",
             "extraWebpackConfig": "webpack.config.js",
-            "commonChunk": false
+            "commonChunk": false,
+            "allowedCommonJsDependencies": [
+              "@angular-architects/module-federation"
+            ]
           },
           "configurations": {
             "production": {
@@ -112,7 +115,10 @@
             ],
             "styles": ["projects/mfe-beneficios/src/styles.scss"],
             "extraWebpackConfig": "projects/mfe-beneficios/webpack.config.js",
-            "commonChunk": false
+            "commonChunk": false,
+            "allowedCommonJsDependencies": [
+              "@angular-architects/module-federation"
+            ]
           },
           "configurations": {
             "production": {

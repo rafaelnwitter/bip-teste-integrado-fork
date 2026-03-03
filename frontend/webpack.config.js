@@ -11,8 +11,13 @@ module.exports = withModuleFederationPlugin({
   shared: {
     ...shareAll({
       singleton: true,
-      strictVersion: true,
+      strictVersion: false,
       requiredVersion: 'auto',
     }),
+    '@angular/core': { singleton: true },
+    '@angular/common': { singleton: true },
+    '@angular/common/http': { singleton: true }, 
+    '@angular/router': { singleton: true },
+    'rxjs': { singleton: true }
   },
 });
