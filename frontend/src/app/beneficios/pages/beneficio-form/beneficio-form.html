@@ -39,7 +39,7 @@
     </div>
 
     <div class="form-actions">
-      <lib-button variant="primary" (clicked)="salvar()" [disabled]="form.invalid">
+      <lib-button type="submit" variant="primary" [disabled]="form.invalid">
         {{ isEdicao ? 'Atualizar' : 'Criar' }}
       </lib-button>
       <lib-button variant="secondary" (clicked)="cancelar()">Cancelar</lib-button>
