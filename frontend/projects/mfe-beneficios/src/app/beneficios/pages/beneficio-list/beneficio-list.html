@@ -4,11 +4,11 @@
     <lib-button variant="primary" routerLink="/beneficios/novo">+ Novo Benefício</lib-button>
   </div>
 
-  <div class="error-msg" *ngIf="erro">{{ erro }}</div>
+  <div class="error-msg" *ngIf="erro && !loading">{{ erro }}</div>
 
-  <lib-loading [visivel]="loading"></lib-loading>
+  <lib-loading [visivel]="loading" *ngIf="loading"></lib-loading>
 
-  <div class="grid" *ngIf="!loading">
+  <div class="grid" *ngIf="!loading && !erro">
     <lib-card
       *ngFor="let b of beneficios"
       [title]="b.nome"
@@ -24,7 +24,7 @@
       </div>
     </lib-card>
 
-    <p class="empty" *ngIf="beneficios.length === 0 && !loading">
+    <p class="empty" *ngIf="beneficios.length === 0">
       Nenhum benefício encontrado.
     </p>
   </div>

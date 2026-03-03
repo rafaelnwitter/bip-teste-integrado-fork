@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { Beneficio } from '../../models/beneficio.model';
-import { BeneficioService } from '../../services/beneficio.service';
-import { CardComponent } from 'shared';
-import { ButtonComponent } from 'shared';
-import { ConfirmDialogComponent } from 'shared';
-import { LoadingComponent } from 'shared';
+import { finalize } from 'rxjs/operators';
+import { 
+  Beneficio, 
+  BeneficioService, 
+  CardComponent, 
+  ButtonComponent, 
+  ConfirmDialogComponent, 
+  LoadingComponent 
+} from 'shared';
 
 @Component({
   selector: 'app-beneficio-list',
@@ -23,16 +26,14 @@ import { LoadingComponent } from 'shared';
   styleUrl: './beneficio-list.css'
 })
 export class BeneficioListComponent implements OnInit {
+  private readonly service = inject(BeneficioService);
+  private readonly router = inject(Router);
+
   beneficios: Beneficio[] = [];
-  loading = false;
+  loading = true;
   erro = '';
   dialogVisivel = false;
   idParaDeletar: number | null = null;
-
-  constructor(
-    private service: BeneficioService,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.carregar();
@@ -41,9 +42,12 @@ export class BeneficioListComponent implements OnInit {
   carregar(): void {
     this.loading = true;
     this.erro = '';
-    this.service.listar().subscribe({
-      next: (data) => { this.beneficios = data; this.loading = false; },
-      error: () => { this.erro = 'Erro ao carregar benefícios'; this.loading = false; }
+    
+    this.service.listar().pipe(
+      finalize(() => this.loading = false)
+    ).subscribe({
+      next: (data) => this.beneficios = data,
+      error: () => this.erro = 'Erro ao carregar benefícios'
     });
   }
 
@@ -58,9 +62,15 @@ export class BeneficioListComponent implements OnInit {
 
   confirmarDelete(): void {
     if (this.idParaDeletar) {
-      this.service.deletar(this.idParaDeletar).subscribe({
-        next: () => { this.dialogVisivel = false; this.carregar(); },
-        error: () => { this.erro = 'Erro ao deletar'; this.dialogVisivel = false; }
+      this.loading = true;
+      this.service.deletar(this.idParaDeletar).pipe(
+        finalize(() => {
+          this.dialogVisivel = false;
+          this.loading = false;
+        })
+      ).subscribe({
+        next: () => this.carregar(),
+        error: () => this.erro = 'Erro ao deletar'
       });
     }
   }

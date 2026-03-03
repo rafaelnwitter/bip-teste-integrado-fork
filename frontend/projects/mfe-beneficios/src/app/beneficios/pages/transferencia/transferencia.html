@@ -1,10 +1,12 @@
 <div class="container">
   <h2>Transferência entre Benefícios</h2>
 
-  <div class="error-msg" *ngIf="erro">{{ erro }}</div>
+  <div class="error-msg" *ngIf="erro && !loading">{{ erro }}</div>
   <div class="success-msg" *ngIf="sucesso">{{ sucesso }}</div>
 
-  <form [formGroup]="form" (ngSubmit)="transferir()" class="form-card">
+  <lib-loading [visivel]="loading" *ngIf="loading"></lib-loading>
+
+  <form [formGroup]="form" (ngSubmit)="transferir()" class="form-card" *ngIf="!loading">
     <div class="field">
       <label>Origem *</label>
       <select formControlName="fromId">

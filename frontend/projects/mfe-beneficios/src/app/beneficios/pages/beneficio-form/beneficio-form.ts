@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { finalize } from 'rxjs/operators';
-import { BeneficioService } from '../../services/beneficio.service';
-import { ButtonComponent } from 'shared';
-import { LoadingComponent } from 'shared';
+import { BeneficioService, ButtonComponent, LoadingComponent } from 'shared';
 
 @Component({
   selector: 'app-beneficio-form',
@@ -21,19 +19,17 @@ import { LoadingComponent } from 'shared';
   styleUrl: './beneficio-form.css'
 })
 export class BeneficioFormComponent implements OnInit {
+  private readonly fb = inject(FormBuilder);
+  private readonly service = inject(BeneficioService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
   form!: FormGroup;
   isEdicao = false;
   id: number | null = null;
   loading = false;
   erro = '';
   sucesso = '';
-
-  constructor(
-    private fb: FormBuilder,
-    private service: BeneficioService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
