@@ -1,26 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { finalize, timeout, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { Beneficio } from '../../models/beneficio.model';
-import { BeneficioService } from '../../services/beneficio.service';
+import { Router, RouterModule } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+import { 
+  Beneficio, 
+  BeneficioService, 
+  CardComponent, 
+  ButtonComponent, 
+  ConfirmDialogComponent, 
+  LoadingComponent 
+} from 'shared';
 
 @Component({
   selector: 'app-beneficio-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule, 
+    RouterModule,
+    CardComponent,
+    ButtonComponent,
+    ConfirmDialogComponent,
+    LoadingComponent
+  ],
   templateUrl: './beneficio-list.html',
   styleUrl: './beneficio-list.css',
 })
 export class BeneficioListComponent implements OnInit {
+  private readonly service = inject(BeneficioService);
+  private readonly router = inject(Router);
+
   beneficios: Beneficio[] = [];
-  loading = false;
+  loading = true;
   erro = '';
   dialogVisivel = false;
   idParaDeletar: number | null = null;
-
-  constructor(private service: BeneficioService) {}
 
   ngOnInit(): void {
     this.carregar();
@@ -29,21 +42,16 @@ export class BeneficioListComponent implements OnInit {
   carregar(): void {
     this.loading = true;
     this.erro = '';
-    this.service.listar()
-      .pipe(
-        timeout(5000),
-        catchError((err) => {
-          this.erro = 'Erro ao carregar benefícios';
-          console.error('Erro ao carregar:', err);
-          return of([] as Beneficio[]);
-        }),
-        finalize(() => (this.loading = false))
-      )
-      .subscribe({
-        next: (data) => {
-          this.beneficios = data;
-        },
-      });
+    this.service.listar().pipe(
+      finalize(() => this.loading = false)
+    ).subscribe({
+      next: (data) => this.beneficios = data,
+      error: () => this.erro = 'Erro ao carregar benefícios'
+    });
+  }
+
+  onEditar(beneficio: Beneficio): void {
+    this.router.navigate(['/beneficios/editar', beneficio.id]);
   }
 
   onDeletar(id: number): void {
@@ -53,15 +61,15 @@ export class BeneficioListComponent implements OnInit {
 
   confirmarDelete(): void {
     if (this.idParaDeletar) {
-      this.service.deletar(this.idParaDeletar).subscribe({
-        next: () => {
+      this.loading = true;
+      this.service.deletar(this.idParaDeletar).pipe(
+        finalize(() => {
           this.dialogVisivel = false;
-          this.carregar();
-        },
-        error: () => {
-          this.erro = 'Erro ao deletar';
-          this.dialogVisivel = false;
-        },
+          this.loading = false;
+        })
+      ).subscribe({
+        next: () => this.carregar(),
+        error: () => this.erro = 'Erro ao deletar'
       });
     }
   }

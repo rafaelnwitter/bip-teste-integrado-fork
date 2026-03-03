@@ -1,15 +1,13 @@
 <div class="container">
   <div class="header">
     <h2>{{ isEdicao ? 'Editar' : 'Novo' }} Benefício</h2>
-    <button class="btn btn-secondary" (click)="cancelar()">← Voltar</button>
+    <lib-button variant="secondary" (clicked)="cancelar()">← Voltar</lib-button>
   </div>
 
   <div class="error-msg" *ngIf="erro">{{ erro }}</div>
   <div class="success-msg" *ngIf="sucesso">{{ sucesso }}</div>
 
-  <div class="loading" *ngIf="loading">
-    <div class="spinner"></div>
-  </div>
+  <lib-loading [visivel]="loading" *ngIf="loading"></lib-loading>
 
   <form [formGroup]="form" (ngSubmit)="salvar()" *ngIf="!loading" class="form-card">
     <div class="field">
@@ -41,10 +39,10 @@
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+      <lib-button variant="primary" (clicked)="salvar()" [disabled]="form.invalid">
         {{ isEdicao ? 'Atualizar' : 'Criar' }}
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+      </lib-button>
+      <lib-button variant="secondary" (clicked)="cancelar()">Cancelar</lib-button>
     </div>
   </form>
 </div>

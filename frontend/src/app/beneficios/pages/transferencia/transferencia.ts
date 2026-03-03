@@ -1,28 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
-import { Beneficio } from '../../models/beneficio.model';
-import { BeneficioService } from '../../services/beneficio.service';
+import { Beneficio, BeneficioService, LoadingComponent } from 'shared';
 
 @Component({
   selector: 'app-transferencia',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LoadingComponent],
   templateUrl: './transferencia.html',
   styleUrl: './transferencia.css',
 })
 export class TransferenciaComponent implements OnInit {
+  private readonly fb = inject(FormBuilder);
+  private readonly service = inject(BeneficioService);
+
   form!: FormGroup;
   beneficios: Beneficio[] = [];
-  loading = false;
+  loading = true;
   erro = '';
   sucesso = '';
-
-  constructor(
-    private fb: FormBuilder,
-    private service: BeneficioService
-  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -35,9 +32,14 @@ export class TransferenciaComponent implements OnInit {
   }
 
   carregarBeneficios(): void {
-    this.service.listar().subscribe({
-      next: (data) => (this.beneficios = data),
-      error: () => (this.erro = 'Erro ao carregar benefícios'),
+    this.loading = true;
+    this.erro = '';
+    
+    this.service.listar().pipe(
+      finalize(() => this.loading = false)
+    ).subscribe({
+      next: (data) => this.beneficios = data,
+      error: () => this.erro = 'Erro ao carregar benefícios'
     });
   }
 
