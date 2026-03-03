@@ -1,0 +1,32 @@
+.container { max-width: 1200px; margin: 0 auto; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.header h2 { margin: 0; font-size: 22px; color: #333; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; background: white; transition: box-shadow 0.2s; }
+.card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.card.inactive { opacity: 0.6; background: #f9f9f9; }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.card-header h3 { margin: 0; font-size: 16px; }
+.card-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+.badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; background: #ffcdd2; color: #c62828; }
+.badge.active { background: #c8e6c9; color: #2e7d32; }
+.valor { font-weight: 700; font-size: 18px; color: #1565c0; margin: 8px 0; }
+.descricao { color: #666; margin: 4px 0; font-size: 14px; }
+.empty { color: #999; text-align: center; padding: 48px; grid-column: 1/-1; }
+.error-msg { background: #ffebee; color: #c62828; padding: 12px; border-radius: 4px; margin-bottom: 16px; }
+.btn { display: inline-block; padding: 8px 16px; border-radius: 4px; cursor: pointer; border: none; font-size: 14px; font-weight: 500; text-decoration: none; background: #1565c0; color: white; transition: background 0.2s; }
+.btn:hover { background: #0d47a1; }
+.btn-sm { padding: 5px 12px; font-size: 13px; }
+.btn-primary { background: #1565c0; color: white; }
+.btn-secondary { background: #757575; color: white; }
+.btn-secondary:hover { background: #616161; }
+.btn-danger { background: #d32f2f; color: white; }
+.btn-danger:hover { background: #b71c1c; }
+.loading { display: flex; flex-direction: column; align-items: center; padding: 48px; }
+.spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top: 4px solid #1565c0; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.dialog { background: white; padding: 24px; border-radius: 8px; min-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+.dialog h3 { margin: 0 0 8px; }
+.dialog p { color: #555; margin: 0 0 16px; }
+.dialog-actions { display: flex; gap: 8px; justify-content: flex-end; }

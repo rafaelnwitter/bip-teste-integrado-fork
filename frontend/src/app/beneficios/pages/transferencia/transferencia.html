@@ -1,0 +1,50 @@
+<div class="container">
+  <h2>Transferência entre Benefícios</h2>
+
+  <div class="error-msg" *ngIf="erro">{{ erro }}</div>
+  <div class="success-msg" *ngIf="sucesso">{{ sucesso }}</div>
+
+  <form [formGroup]="form" (ngSubmit)="transferir()" class="form-card">
+    <div class="field">
+      <label>Origem *</label>
+      <select formControlName="fromId">
+        <option [ngValue]="null" disabled>Selecione o benefício de origem</option>
+        <option *ngFor="let b of beneficios" [ngValue]="b.id">
+          {{ b.nome }} — R$ {{ b.valor | number:'1.2-2' }}
+        </option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Destino *</label>
+      <select formControlName="toId">
+        <option [ngValue]="null" disabled>Selecione o benefício de destino</option>
+        <option *ngFor="let b of beneficios" [ngValue]="b.id">
+          {{ b.nome }} — R$ {{ b.valor | number:'1.2-2' }}
+        </option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Valor *</label>
+      <input type="number" step="0.01" formControlName="valor" placeholder="0.00" />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading">
+        {{ loading ? 'Transferindo...' : 'Transferir' }}
+      </button>
+    </div>
+  </form>
+
+  <!-- Saldos atuais -->
+  <div class="saldos" *ngIf="beneficios.length > 0">
+    <h3>Saldos Atuais</h3>
+    <div class="saldo-grid">
+      <div class="saldo-card" *ngFor="let b of beneficios">
+        <span class="saldo-nome">{{ b.nome }}</span>
+        <span class="saldo-valor">R$ {{ b.valor | number:'1.2-2' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

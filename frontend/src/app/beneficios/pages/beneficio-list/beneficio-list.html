@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="header">
+    <h2>Benefícios</h2>
+    <a class="btn btn-primary" routerLink="/beneficios/novo">+ Novo Benefício</a>
+  </div>
+
+  <div class="error-msg" *ngIf="erro">{{ erro }}</div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Carregando...</p>
+  </div>
+
+  <div class="grid" *ngIf="!loading">
+    <div class="card" *ngFor="let b of beneficios" [class.inactive]="!b.ativo">
+      <div class="card-header">
+        <h3>{{ b.nome }}</h3>
+        <span class="badge" [class.active]="b.ativo">
+          {{ b.ativo ? 'Ativo' : 'Inativo' }}
+        </span>
+      </div>
+      <p class="descricao">{{ b.descricao || 'Sem descrição' }}</p>
+      <p class="valor">R$ {{ b.valor | number:'1.2-2' }}</p>
+      <div class="card-actions">
+        <a class="btn btn-sm" [routerLink]="['/beneficios/editar', b.id]">Editar</a>
+        <button class="btn btn-sm btn-danger" (click)="onDeletar(b.id!)">Excluir</button>
+      </div>
+    </div>
+
+    <p class="empty" *ngIf="beneficios.length === 0">
+      Nenhum benefício encontrado.
+    </p>
+  </div>
+
+  <!-- Confirm Dialog -->
+  <div class="overlay" *ngIf="dialogVisivel" (click)="cancelarDelete()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <h3>Confirmação</h3>
+      <p>Deseja realmente excluir este benefício?</p>
+      <div class="dialog-actions">
+        <button class="btn btn-danger" (click)="confirmarDelete()">Confirmar</button>
+        <button class="btn btn-secondary" (click)="cancelarDelete()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
