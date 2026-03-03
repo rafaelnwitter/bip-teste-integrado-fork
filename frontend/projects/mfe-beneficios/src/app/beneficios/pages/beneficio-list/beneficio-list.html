@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="header">
+    <h1>Benefícios</h1>
+    <lib-button variant="primary" routerLink="/beneficios/novo">+ Novo Benefício</lib-button>
+  </div>
+
+  <div class="error-msg" *ngIf="erro">{{ erro }}</div>
+
+  <lib-loading [visivel]="loading"></lib-loading>
+
+  <div class="grid" *ngIf="!loading">
+    <lib-card
+      *ngFor="let b of beneficios"
+      [title]="b.nome"
+      [active]="b.ativo">
+      <span slot="badge" class="badge" [class.active]="b.ativo">
+        {{ b.ativo ? 'Ativo' : 'Inativo' }}
+      </span>
+      <p class="descricao">{{ b.descricao || 'Sem descrição' }}</p>
+      <p class="valor">R$ {{ b.valor | number:'1.2-2' }}</p>
+      <div slot="actions">
+        <lib-button variant="primary" (clicked)="onEditar(b)">Editar</lib-button>
+        <lib-button variant="danger" (clicked)="onDeletar(b.id!)">Excluir</lib-button>
+      </div>
+    </lib-card>
+
+    <p class="empty" *ngIf="beneficios.length === 0 && !loading">
+      Nenhum benefício encontrado.
+    </p>
+  </div>
+
+  <lib-confirm-dialog
+    [visivel]="dialogVisivel"
+    mensagem="Deseja realmente excluir este benefício?"
+    (confirmar)="confirmarDelete()"
+    (cancelar)="cancelarDelete()">
+  </lib-confirm-dialog>
+</div>

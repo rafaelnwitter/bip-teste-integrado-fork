@@ -1,0 +1,10 @@
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.header h1 { margin: 0; font-size: 24px; color: #333; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.error-msg { background: #ffebee; color: #c62828; padding: 12px; border-radius: 4px; margin-bottom: 16px; }
+.badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; background: #ffcdd2; color: #c62828; }
+.badge.active { background: #c8e6c9; color: #2e7d32; }
+.valor { font-weight: bold; font-size: 18px; color: #1976d2; margin: 8px 0; }
+.descricao { color: #666; margin: 4px 0; }
+.empty { color: #999; text-align: center; padding: 48px; grid-column: 1/-1; }

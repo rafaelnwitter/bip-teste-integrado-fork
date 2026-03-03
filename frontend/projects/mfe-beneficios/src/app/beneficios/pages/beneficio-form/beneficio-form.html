@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="header">
+    <h1>{{ isEdicao ? 'Editar' : 'Novo' }} Benefício</h1>
+    <lib-button variant="secondary" (clicked)="cancelar()">← Voltar</lib-button>
+  </div>
+
+  <lib-loading [visivel]="loading"></lib-loading>
+
+  <div class="error-msg" *ngIf="erro">{{ erro }}</div>
+  <div class="success-msg" *ngIf="sucesso">{{ sucesso }}</div>
+
+  <form [formGroup]="form" (ngSubmit)="salvar()" *ngIf="!loading">
+    <div class="field">
+      <label>Nome *</label>
+      <input formControlName="nome" placeholder="Nome do benefício" [class.error]="isInvalid('nome')" />
+      <span class="error-msg" *ngIf="isInvalid('nome')">
+        Nome é obrigatório (máx. 100 caracteres)
+      </span>
+    </div>
+
+    <div class="field">
+      <label>Descrição</label>
+      <textarea formControlName="descricao" placeholder="Descrição do benefício" rows="3"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Valor *</label>
+      <input type="number" step="0.01" formControlName="valor"
+             placeholder="0.00" [class.error]="isInvalid('valor')" />
+      <span class="error-msg" *ngIf="isInvalid('valor')">
+        Valor é obrigatório e deve ser maior que zero
+      </span>
+    </div>
+
+    <div class="field checkbox">
+      <label>
+        <input type="checkbox" formControlName="ativo" /> Ativo
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <lib-button type="submit" variant="primary" [disabled]="form.invalid" (clicked)="salvar()">
+        {{ isEdicao ? 'Atualizar' : 'Criar' }}
+      </lib-button>
+      <lib-button variant="secondary" (clicked)="cancelar()">Cancelar</lib-button>
+    </div>
+  </form>
+</div>
