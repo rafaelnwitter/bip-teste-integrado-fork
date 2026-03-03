@@ -1,0 +1,9 @@
+**/target/
+**/node_modules/
+**/.angular/
+*.class
+*.jar
+*.log
+.idea/
+*.iml
+.DS_Store
