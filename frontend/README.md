@@ -1,59 +1,69 @@
-# BeneficiosApp
+# Frontend — BIP Teste Integrado
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+Aplicação Angular 19 com arquitetura de **Micro-Frontends** via [Module Federation](https://webpack.js.org/concepts/module-federation/) para gestão de benefícios.
 
-## Development server
+## Estrutura
 
-To start a local development server, run:
+```
+frontend/
+├── src/app/                     # App shell (host)
+│   └── beneficios/pages/        # Páginas de benefícios no host
+├── projects/
+│   ├── mfe-beneficios/          # Micro-frontend remoto de benefícios
+│   │   └── src/app/beneficios/  # Listagem, formulário, transferência
+│   └── shared/                  # Biblioteca compartilhada (componentes, serviços, models)
+└── webpack.config.js            # Configuração Module Federation
+```
+
+## Pré-requisitos
+
+- **Node.js 18+**
+- **Angular CLI** (`npm install -g @angular/cli`)
+- Backend rodando em `http://localhost:8085`
+
+## Como Executar
 
 ```bash
+# Instalar dependências
+npm install
+
+# Compilar biblioteca compartilhada
+ng build shared
+
+# Executar app shell (host)
 ng serve
+# Acesse: http://localhost:4200
+
+# Executar micro-frontend de benefícios (em outro terminal)
+ng serve mfe-beneficios --port 4201
+# Acesse: http://localhost:4201
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Funcionalidades
 
-## Code scaffolding
+- **Listagem de benefícios** — tabela com todos os benefícios ativos
+- **Criação/Edição** — formulário com validações reativas
+- **Exclusão** — soft delete com confirmação
+- **Transferência** — transferência de valores entre benefícios
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Testes
 
 ```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
+# Testes unitários do app shell
 ng test
+
+# Testes do micro-frontend
+ng test mfe-beneficios
+
+# Testes da biblioteca compartilhada
+ng test shared
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Build para Produção
 
 ```bash
-ng e2e
+ng build --configuration production
+ng build mfe-beneficios --configuration production
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Os artefatos são gerados no diretório `dist/`.
