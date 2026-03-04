@@ -2,7 +2,8 @@ package com.example.backend.service;
 
 import com.example.backend.dto.BeneficioDTO;
 import com.example.backend.dto.TransferDTO;
-import com.example.backend.model.Beneficio;
+import com.example.ejb.Beneficio;
+import com.example.ejb.BeneficioEjbService;
 import com.example.backend.repository.BeneficioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,11 @@ import java.util.List;
 public class BeneficioService {
 
     private final BeneficioRepository repository;
+    private final BeneficioEjbService ejbService;
 
-    public BeneficioService(BeneficioRepository repository) {
+    public BeneficioService(BeneficioRepository repository, BeneficioEjbService ejbService) {
         this.repository = repository;
+        this.ejbService = ejbService;
     }
 
     @Transactional(readOnly = true)
@@ -67,7 +70,7 @@ public class BeneficioService {
 
     /**
      * Transferência de valor entre dois benefícios.
-     * Replica a lógica corrigida do EJB com:
+     * Delega ao BeneficioEjbService que implementa:
      * - Validação de valor positivo
      * - Lock pessimista (PESSIMISTIC_WRITE) para evitar race conditions
      * - Verificação de saldo suficiente
@@ -78,33 +81,14 @@ public class BeneficioService {
             throw new IllegalArgumentException("Origem e destino devem ser diferentes");
         }
 
-        // Lock pessimista em ordem consistente (menor ID primeiro) para evitar deadlock
-        Long firstId = Math.min(dto.fromId(), dto.toId());
-        Long secondId = Math.max(dto.fromId(), dto.toId());
-
-        repository.findByIdForUpdate(firstId)
-                .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Beneficio não encontrado: " + firstId));
-        repository.findByIdForUpdate(secondId)
-                .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Beneficio não encontrado: " + secondId));
-
-        // Agora busca as entidades já lockadas
-        Beneficio from = repository.findById(dto.fromId())
-                .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Beneficio origem não encontrado: " + dto.fromId()));
-        Beneficio to = repository.findById(dto.toId())
-                .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Beneficio destino não encontrado: " + dto.toId()));
-
-        if (from.getValor().compareTo(dto.valor()) < 0) {
-            throw new IllegalStateException("Saldo insuficiente no benefício: " + dto.fromId());
+        try {
+            ejbService.transfer(dto.fromId(), dto.toId(), dto.valor());
+        } catch (IllegalArgumentException ex) {
+            // EJB lança IllegalArgumentException para "não encontrado" — traduz para 404
+            if (ex.getMessage() != null && ex.getMessage().contains("não encontrado")) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+            }
+            throw ex;
         }
-
-        from.setValor(from.getValor().subtract(dto.valor()));
-        to.setValor(to.getValor().add(dto.valor()));
-
-        repository.save(from);
-        repository.save(to);
     }
 }

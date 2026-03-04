@@ -1,6 +1,6 @@
 package com.example.backend;
 
-import com.example.backend.model.Beneficio;
+import com.example.ejb.Beneficio;
 import com.example.backend.repository.BeneficioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

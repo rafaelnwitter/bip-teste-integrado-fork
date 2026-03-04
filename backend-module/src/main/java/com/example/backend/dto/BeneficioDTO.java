@@ -1,6 +1,6 @@
 package com.example.backend.dto;
 
-import com.example.backend.model.Beneficio;
+import com.example.ejb.Beneficio;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
