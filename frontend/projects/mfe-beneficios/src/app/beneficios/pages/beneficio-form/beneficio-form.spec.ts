@@ -24,7 +24,9 @@ describe('BeneficioFormComponent (MFE)', () => {
   function createComponent(routeParams: Record<string, string> = {}) {
     activatedRoute = {
       snapshot: {
-        params: routeParams,
+        paramMap: {
+          get: (key: string) => routeParams[key] ?? null,
+        },
       },
     };
 
@@ -84,8 +86,8 @@ describe('BeneficioFormComponent (MFE)', () => {
       component.ngOnInit();
 
       expect(component.isEdicao).toBe(true);
-      expect(component.id).toBe('1');
-      expect(beneficioService.buscarPorId).toHaveBeenCalledWith('1');
+      expect(component.id).toBe(1);
+      expect(beneficioService.buscarPorId).toHaveBeenCalledWith(1);
     });
 
     it('should populate form when loading beneficio for editing', () => {

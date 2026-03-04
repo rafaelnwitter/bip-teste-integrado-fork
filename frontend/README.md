@@ -1,6 +1,6 @@
 # Frontend — BIP Teste Integrado
 
-Aplicação Angular 19 com arquitetura de **Micro-Frontends** via [Module Federation](https://webpack.js.org/concepts/module-federation/) para gestão de benefícios.
+Aplicação Angular 21 com arquitetura de **Micro-Frontends** via [Module Federation](https://webpack.js.org/concepts/module-federation/) para gestão de benefícios.
 
 ## Estrutura
 
@@ -37,6 +37,8 @@ ng serve
 # Executar micro-frontend de benefícios (em outro terminal)
 ng serve mfe-beneficios --port 4201
 # Acesse: http://localhost:4201
+
+> Para apontar o host para outro endereço do remote, defina `MFE_BENEFICIOS_REMOTE` (ex.: `http://meu-host/remoteEntry.js`).
 ```
 
 ## Funcionalidades

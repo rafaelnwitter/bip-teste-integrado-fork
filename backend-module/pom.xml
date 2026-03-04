@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Testes -->
@@ -77,8 +77,8 @@
         <plugins>
             <plugin>
                 <configuration>
-                <mainClass>com.example.backend.BackendApplication</mainClass>
-                    </configuration>
+                    <mainClass>com.example.backend.BackendApplication</mainClass>
+                </configuration>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>

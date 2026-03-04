@@ -7,7 +7,7 @@ Solução fullstack completa em camadas para gestão de benefícios, com CRUD e 
 ```
 ┌─────────────┐     ┌──────────────────┐     ┌──────────────┐     ┌────────────┐
 │  Frontend   │────▶│  Backend (REST)  │────▶│  EJB Module  │────▶│ PostgreSQL │
-│  Angular 19 │     │  Spring Boot 3.2 │     │  Jakarta EE  │     │    16      │
+│  Angular 21 │     │  Spring Boot 3.2 │     │  Jakarta EE  │     │    16      │
 └─────────────┘     └──────────────────┘     └──────────────┘     └────────────┘
     :4200               :8085                   (embutido)          :5432
 ```
@@ -17,7 +17,7 @@ Solução fullstack completa em camadas para gestão de benefícios, com CRUD e 
 | **Database** | PostgreSQL 16 | Banco de dados relacional com schema e dados iniciais |
 | **EJB Module** | Jakarta EE (Stateless EJB) | Lógica de negócio de transferência com locking pessimista |
 | **Backend** | Spring Boot 3.2 + JPA | API REST com CRUD, validações e integração com EJB |
-| **Frontend** | Angular 19 + Module Federation | Interface de usuário SPA com micro-frontend |
+| **Frontend** | Angular 21 + Module Federation | Interface de usuário SPA com micro-frontend |
 
 ## 🚀 Como Executar
 
@@ -36,11 +36,14 @@ Solução fullstack completa em camadas para gestão de benefícios, com CRUD e 
 docker-compose up -d
 
 # (Opcional) Executar scripts manualmente
-psql -h localhost -U admin -d backend_db -f db/schema.sql
-psql -h localhost -U admin -d backend_db -f db/seed.sql
+psql -h localhost -U admin -d backend_db -f backend-module/src/main/resources/db/schema.sql
+psql -h localhost -U admin -d backend_db -f backend-module/src/main/resources/db/seed.sql
 ```
 
 > O Spring Boot está configurado com `ddl-auto=update`, então as tabelas serão criadas automaticamente ao iniciar o backend.
+> Além disso, o backend agora executa `backend-module/src/main/resources/db/schema.sql` e `backend-module/src/main/resources/db/seed.sql` automaticamente no startup.
+> **Importante:** no Docker, scripts em `/docker-entrypoint-initdb.d` só rodam na **primeira** inicialização do volume.
+> Se o volume já existe, remova-o com `docker-compose down -v` ou rode os scripts manualmente.
 
 ### 2. Backend (Spring Boot)
 
@@ -170,8 +173,8 @@ ng test mfe-beneficios
 ```
 bip-teste-integrado/
 ├── db/                          # Scripts SQL
-│   ├── schema.sql               # Criação da tabela BENEFICIO
-│   └── seed.sql                 # Dados iniciais
+│   ├── backend-module/src/main/resources/db/schema.sql  # Criação da tabela BENEFICIO
+│   └── backend-module/src/main/resources/db/seed.sql    # Dados iniciais
 ├── ejb-module/                  # Módulo EJB (lógica de transferência)
 │   └── src/main/java/.../BeneficioEjbService.java
 ├── backend-module/              # Backend Spring Boot
@@ -200,9 +203,9 @@ bip-teste-integrado/
 | Propriedade | Valor Padrão | Descrição |
 |-------------|-------------|-----------|
 | `server.port` | `8085` | Porta do backend |
-| `spring.datasource.url` | `jdbc:postgresql://localhost:5432/backend_db` | URL do banco |
-| `spring.datasource.username` | `admin` | Usuário do banco |
-| `spring.datasource.password` | `admin123` | Senha do banco |
+| `spring.datasource.url` | `jdbc:postgresql://localhost:5432/backend_db` | URL do banco (configurável via `SPRING_DATASOURCE_URL`) |
+| `spring.datasource.username` | `admin` | Usuário do banco (configurável via `SPRING_DATASOURCE_USERNAME`) |
+| `spring.datasource.password` | `admin123` | Senha do banco (configurável via `SPRING_DATASOURCE_PASSWORD`) |
 | `spring.jpa.hibernate.ddl-auto` | `update` | Estratégia de DDL |
 
 ### Docker Compose
