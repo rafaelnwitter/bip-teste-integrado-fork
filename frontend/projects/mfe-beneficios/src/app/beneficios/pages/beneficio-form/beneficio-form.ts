@@ -39,14 +39,17 @@ export class BeneficioFormComponent implements OnInit {
       ativo: [true]
     });
 
-    this.id = this.route.snapshot.params['id'] ?? null;
-    if (this.id) {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.id = idParam ? Number(idParam) : null;
+    if (this.id !== null && !Number.isNaN(this.id)) {
       this.isEdicao = true;
       this.loading = true;
       this.service.buscarPorId(this.id).subscribe({
         next: (b) => { this.form.patchValue(b); this.loading = false; },
         error: () => { this.erro = 'Erro ao carregar benefício'; this.loading = false; }
       });
+    } else if (idParam) {
+      this.erro = 'ID inválido';
     }
   }
 

@@ -21,7 +21,7 @@ Criar solução completa em camadas (DB, EJB, Backend, Frontend), corrigindo bug
 - .github/workflows/: CI
 
 ## ✅ Tarefas do candidato
-1. Executar db/schema.sql e db/seed.sql
+1. Executar backend-module/src/main/resources/db/schema.sql e backend-module/src/main/resources/db/seed.sql
 2. Corrigir bug no BeneficioEjbService
 3. Implementar backend CRUD + integração com EJB
 4. Desenvolver frontend Angular consumindo backend

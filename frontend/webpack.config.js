@@ -3,9 +3,12 @@ const {
   withModuleFederationPlugin,
 } = require('@angular-architects/module-federation/webpack');
 
+const mfeBeneficiosRemote =
+  process.env.MFE_BENEFICIOS_REMOTE || 'http://localhost:4201/remoteEntry.js';
+
 module.exports = withModuleFederationPlugin({
   remotes: {
-    mfeBeneficios: 'http://localhost:4201/remoteEntry.js',
+    mfeBeneficios: mfeBeneficiosRemote,
   },
 
   shared: {

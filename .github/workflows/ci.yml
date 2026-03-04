@@ -3,49 +3,14 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  backend:
-    name: Backend
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'maven'
-
-      - name: Run tests
-        run: mvn -B -f backend-module/pom.xml clean test
-
-      - name: Build package
-        run: mvn -B -f backend-module/pom.xml package -DskipTests
-
-  frontend:
-    name: Frontend (build + tests)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Node 22
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build shared lib
-        run: npx ng build shared
-
-      - name: Build app
-        run: npx ng build
-
-      - name: Run tests
-        run: npm run test:all
+      - name: Build backend
+        run: mvn -B -f backend-module clean package

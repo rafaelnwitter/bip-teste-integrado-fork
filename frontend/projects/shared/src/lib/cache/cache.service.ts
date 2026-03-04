@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, tap, shareReplay } from 'rxjs';
+import { Observable, of, tap, shareReplay, finalize } from 'rxjs';
 
 interface CacheEntry<T> {
   data: T;
@@ -40,6 +40,8 @@ export class CacheService {
     const observable = request().pipe(
       tap((data) => {
         this.cache.set(key, { data, timestamp: Date.now() });
+      }),
+      finalize(() => {
         this.inFlightRequests.delete(key);
       }),
       shareReplay(1)
